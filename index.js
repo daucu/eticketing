@@ -24,6 +24,7 @@ app.use('/api/login', require('./routes/login'));
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/ticket', require('./routes/ticket'));
 app.use('/api/brand', require('./routes/brand'));
+app.use('/api/users', require('./routes/users'));
 
 
 app.listen(PORT, () => {

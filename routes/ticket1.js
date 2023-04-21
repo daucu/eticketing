@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ticketSchema1 = require('./../models/ticket1');
+const ticketSchema1 = require('./../models/ticket_schema');
 // const users_schema = require('./../models/users');
 const jwt= require("jsonwebtoken")
 
@@ -12,7 +12,7 @@ router.post("/", async(req, res) => {
         return res.status(401).json({ message: "Access denied. Please register first", status: "error" });
     }
     const valid_token = jwt.verify(token, process.env.JWT_SECRET, {
-        expiresIn: "1y",
+        expiresIn: "1y", 
         algorithm: "HS256"
     });
     if (!valid_token) return res.status(401).json({ message: "Invalid token" });

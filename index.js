@@ -8,6 +8,22 @@ connectDB();
 //allow json to parsed
 app.use(express.json());
 
+//Allow cors
+const cors = require("cors");
+//Loop of allowed origins
+const allowedOrigins = [
+  "http://localhost:3001",
+  "http://localhost:3000",
+  "https://eticketing-admin.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
 //allow static files
 app.use(express.static(__dirname + '/uploads'));
 

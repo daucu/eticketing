@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const BrandSchema = require('./../models/brand_schema');
+const CheckAuth = require("./../functions/check_auth");
 
 router.get('/', async (req, res) => {
     try {
@@ -11,11 +12,26 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/add', async (req, res) => {
+router.post('/', async (req, res) => {
+
+    const check = await CheckAuth(req, res);
+
+    if (check.auth === false) {
+        return res.status(401).json({ message: "Unauthorized", auth: false });
+    }
+
+    if (check.data.role !== "admin") {
+        return res.status(401).json({ message: "You Are Not Admin", auth: false });
+    }
+
     const brand = new BrandSchema({
         name: req.body.name,
         description: req.body.description,
-        image: req.body.image,
+        logo: req.body.logo,
+        address: req.body.address,
+        funding_date: req.body.funding_date,
+        phone: req.body.phone,
+        country: req.body.country,
     });
     try {
         const savedBrand = await brand.save();

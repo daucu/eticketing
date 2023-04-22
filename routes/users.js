@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const UsersSchema = require("./../models/users_schema");
 const bcrypt = require("bcryptjs");
+const CheckAuth = require("./../functions/check_auth");
 
 router.get("/", (req, res) => {
     res.json({
@@ -39,7 +40,6 @@ router.post("/", validateRegister, async (req, res) => {
 //Middleware for register validation
 async function validateRegister(req, res, next) {
     const { full_name, phone, email, username, password } = req.body;
-    console.log(req.body);
 
     //Check if all fields are filled
     if (
@@ -126,6 +126,16 @@ async function validateRegister(req, res, next) {
 //Get all users
 router.get("/all", async (req, res) => {
     try {
+        const check = await CheckAuth(req, res);
+
+        if (check.auth === false) {
+            return res.status(401).json({ message: "Unauthorized", auth: false });
+        }
+
+        if (check.data.role !== "admin") {
+            return res.status(401).json({ message: "You Are Not Admin", auth: false });
+        }
+
         const users = await UsersSchema.find().lean();
         res.status(200).json(users);
     } catch (error) {
@@ -137,6 +147,16 @@ router.get("/all", async (req, res) => {
 //Delete user
 router.delete("/:id", async (req, res) => {
     try {
+        const check = await CheckAuth(req, res);
+
+        if (check.auth === false) {
+            return res.status(401).json({ message: "Unauthorized", auth: false });
+        }
+
+        if (check.data.role !== "admin") {
+            return res.status(401).json({ message: "You Are Not Admin", auth: false });
+        }
+
         const user = await UsersSchema.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: "User deleted successfully" });
     } catch (error) {

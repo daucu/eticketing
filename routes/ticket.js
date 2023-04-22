@@ -18,12 +18,8 @@ router.post("/", async (req, res) => {
         return res.status(401).json({ message: "Unauthorized", auth: false });
     }
 
-
-    //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
     let image_link1 = req.files.image_link;
-    //Use the mv() method to place the file in upload directory (i.e. "uploads")
     image_link1.mv('./uploads/' + image_link1.name);
-    console.log(image_link1.name);
 
     //Get ticket fields
     const { brand, requester, assignee, form, type, priority, type_of_issue, impact, subject, description, status } = req.body;

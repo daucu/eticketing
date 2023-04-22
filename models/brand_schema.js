@@ -4,8 +4,9 @@ const mongoose = require("mongoose");
 const BrandSchema = new mongoose.Schema({
     name: {
         type: String,
+        unique: true,
     },
-    about: {
+    description: {
         type: String,
         required: true,
     },
@@ -20,6 +21,7 @@ const BrandSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
+        unique: true,
     },
     country: {
         type: String,

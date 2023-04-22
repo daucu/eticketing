@@ -14,10 +14,6 @@ const ticketSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    cc: {
-        type: String,
-
-    },
     form: {
         type: String,
         required: true
@@ -31,10 +27,6 @@ const ticketSchema = new mongoose.Schema({
         required: true
     },
     type_of_issue: {
-        type: String,
-        required: true
-    },
-    type_of_issue_country: {
         type: String,
         required: true
     },

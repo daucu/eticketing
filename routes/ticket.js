@@ -63,5 +63,21 @@ router.get("/mytickets", async (req, res) => {
     }
 });
 
+//Delete ticket
+router.delete("/:ticketId", async (req, res) => {
+
+    const check = await CheckAuth(req, res);
+
+    if (check.auth === false) {
+        return res.status(401).json({ message: "Unauthorized", auth: false });
+    }
+
+    try {
+        await create_ticket.remove({ _id: req.params.ticketId });
+        res.status(200).json({ message: "Ticket deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message, message: "something went wrong" });
+    }
+});
 
 module.exports = router;

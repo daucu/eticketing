@@ -75,7 +75,7 @@ router.delete("/:ticketId", async (req, res) => {
     try {
         const ticket = await create_ticket.findById(req.params.ticketId);
         if (ticket.requester == check.data._id) {
-            await ticket.remove();
+            await create_ticket.remove();
             res.status(200).json({ message: "Ticket deleted successfully" });
         } else {
             res.status(401).json({ message: "Unauthorized" });

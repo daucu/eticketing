@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
     image_link1.mv('./uploads/' + image_link1.name);
 
     //Get ticket fields
-    const { brand, requester, assignee, form, type, priority, type_of_issue, impact, subject, description, status } = req.body;
+    const { brand, assignee, form, type, priority, type_of_issue, impact, subject, description } = req.body;
     const ticket = new create_ticket({
         brand: brand,
         requester: check.data._id,
@@ -36,7 +36,7 @@ router.post("/", async (req, res) => {
         image: image_link1.name,
         image_link: req.protocol + "://" + req.get("host") + "/" + image_link1.name,
         description: description,
-        status: status
+        status: "active"
     });
 
     //Save ticket
@@ -64,4 +64,4 @@ router.get("/mytickets", async (req, res) => {
 });
 
 
-module.exports = router;    
+module.exports = router;

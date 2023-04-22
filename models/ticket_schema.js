@@ -48,8 +48,8 @@ const ticketSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['unresolved', 'resolved', 'unassigned'],
-        default: 'unassigned'
+        enum: ['active', 'resolved', 'unassigned'],
+        default: 'active'
     },
 
 }, { timestamps: true });

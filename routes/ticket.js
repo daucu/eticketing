@@ -19,6 +19,8 @@ router.post("/", async (req, res) => {
     }
 
     let image_link1 = req.files.image_link;
+    //Remove old name and give new string name to file
+    image_link1.name = Date.now() + path.extname(image_link1.name);
     image_link1.mv('./uploads/' + image_link1.name);
 
     //Get ticket fields
@@ -34,7 +36,6 @@ router.post("/", async (req, res) => {
         impact: impact,
         subject: subject,
         image: image_link1.name,
-        image_link: req.protocol + "://" + req.get("host") + "/" + image_link1.name,
         description: description,
         status: "active"
     });

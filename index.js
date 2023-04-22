@@ -30,10 +30,8 @@ app.use(express.static(__dirname + '/uploads'));
 //enable file upload using express-fileupload
 app.use(fileupload({ createParentPath: true }));
 
-//routes
-app.get('/', async (req, res) => {
-    res.send('Hello World');
-});
+//Give access to upload folder to client
+app.use('/uploads', express.static('uploads'));
 
 app.use('/api/register', require('./routes/register'));
 app.use('/api/login', require('./routes/login'));

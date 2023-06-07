@@ -19,9 +19,9 @@ router.get("/", async (req, res) => {
 //User Login
 router.post("/", checkUser, async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { username, password } = req.body;
 
-        const user = await UsersSchema.findOne({ email }).lean();
+        const user = await UsersSchema.findOne({ username }).lean();
         if (!user)
             return res
                 .status(400)
@@ -35,7 +35,7 @@ router.post("/", checkUser, async (req, res) => {
             {
                 id: user._id,
                 username: user.username,
-                email: user.email,
+                email: user.username,
             },
             process.env.JWT_SECRET,
             {

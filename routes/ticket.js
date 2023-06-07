@@ -109,4 +109,28 @@ router.delete("/:ticketId", async (req, res) => {
   }
 });
 
+//Get all ticket
+router.get("/", async (req, res) => {
+  try {
+    const check = await CheckAuth(req, res);
+
+    if (check.auth === false) {
+      return res.status(401).json({ message: "Unauthorized", auth: false });
+    }
+
+    if (check.data.role !== "super_admin") {
+      return res
+        .status(401)
+        .json({ message: "You Are Not Super Admin", auth: false });
+    }
+
+    const tickets = await create_ticket.find();
+    res.status(200).json(tickets);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: error.message, message: "something went wrong" });
+  }
+});
+
 module.exports = router;

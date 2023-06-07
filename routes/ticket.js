@@ -6,9 +6,20 @@ const CheckAuth = require("./../functions/check_auth");
 
 //Create ticket route
 router.post("/", async (req, res) => {
+  var uploaded_file;
+
   //Check file upload
   if (!req.files) {
-    return res.status(400).json({ message: "No file uploaded" });
+    //Set uploaded file to null
+    uploaded_file = null;
+  } else {
+    //Set uploaded file to file name
+    uploaded_file = req.files.attachment.name;
+
+    let attachment1 = req.files.attachment;
+    //Remove old name and give new string name to file
+    attachment1.name = Date.now() + path.extname(attachment1.name);
+    attachment1.mv("./uploads/" + attachment1.name);
   }
 
   const check = await CheckAuth(req, res);
@@ -17,14 +28,12 @@ router.post("/", async (req, res) => {
     return res.status(401).json({ message: "Unauthorized", auth: false });
   }
 
-  let image_link1 = req.files.image_link;
-  //Remove old name and give new string name to file
-  image_link1.name = Date.now() + path.extname(image_link1.name);
-  image_link1.mv("./uploads/" + image_link1.name);
+  //Generate ticket number
+  const ticket_no = Math.floor(Math.random() * 1000000000);
 
   //Get ticket fields
   const ticket = new create_ticket({
-    ticket_no: req.body.ticket_no,
+    ticket_no: ticket_no,
     priority: req.body.priority,
     subject: req.body.subject,
     description: req.body.description,
@@ -35,8 +44,7 @@ router.post("/", async (req, res) => {
     type: "no_data",
     type_of_issue: "no_data",
     impact: "no_data",
-    image: image_link1.name,
-    status: "active",
+    attachment: uploaded_file,
   });
 
   //Save ticket
@@ -124,7 +132,10 @@ router.get("/", async (req, res) => {
         .json({ message: "You Are Not Super Admin", auth: false });
     }
 
-    const tickets = await create_ticket.find();
+    const tickets = await create_ticket.find().populate({
+      path: "requester",
+      select: "name email full_name",
+    });
     res.status(200).json(tickets);
   } catch (error) {
     res
@@ -133,7 +144,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-//Get ticket by status 
+//Get ticket by status
 router.get("/status/:status", async (req, res) => {
   try {
     const check = await CheckAuth(req, res);
@@ -148,8 +159,41 @@ router.get("/status/:status", async (req, res) => {
         .json({ message: "You Are Not Super Admin", auth: false });
     }
 
-    const tickets = await create_ticket.find({status: req.params.status});
+    const tickets = await create_ticket.find({ status: req.params.status });
     res.status(200).json(tickets);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: error.message, message: "something went wrong" });
+  }
+});
+
+//Update ticket status
+router.patch("/status/:ticketId", async (req, res) => {
+  try {
+    const check = await CheckAuth(req, res);
+
+    if (check.auth === false) {
+      return res.status(401).json({ message: "Unauthorized", auth: false });
+    }
+
+    if (check.data.role !== "super_admin") {
+      return res
+        .status(401)
+        .json({ message: "You Are Not Super Admin", auth: false });
+    }
+
+    const ticket = await create_ticket.findById(req.params.ticketId);
+    if (ticket) {
+      await create_ticket.updateOne(
+        { _id: req.params.ticketId },
+        { $set: { status: req.body.status } }
+      );
+    } else {
+      res.status(404).json({ message: "Ticket not found" });
+    }
+
+    res.status(200).json({ message: "Ticket status updated successfully" });
   } catch (error) {
     res
       .status(500)

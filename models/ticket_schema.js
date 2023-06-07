@@ -10,6 +10,8 @@ const ticketSchema = new mongoose.Schema(
     },
     priority: {
       type: String,
+      enum: ["p1", "p2", "p3"],
+      default: "p3",
       required: true,
     },
     subject: {
@@ -20,30 +22,37 @@ const ticketSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    image: {
-      type: String,
-      required: true,
+    attachment: {
+      type: Array,
     },
     brand: {
       type: String,
+      default: "no_data",
     },
     requester: {
       type: String,
+      default: "no_data",
+      ref: "users",
     },
     assignee: {
       type: String,
+      default: "no_data",
     },
     form: {
       type: String,
+      default: "no_data",
     },
     type: {
       type: String,
+      default: "no_data",
     },
     type_of_issue: {
       type: String,
+      default: "no_data",
     },
     impact: {
       type: String,
+      default: "no_data",
     },
     status: {
       type: String,

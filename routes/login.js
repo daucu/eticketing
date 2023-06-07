@@ -62,7 +62,7 @@ router.post("/", checkUser, async (req, res) => {
 });
 
 async function checkUser(req, res, next) {
-  const username = req.body.email;
+  const username = req.body.username;
   const password = req.body.password;
   //Check all filled or not
   if (

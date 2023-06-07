@@ -9,7 +9,7 @@ connectDB();
 app.use(express.json());
 
 //Allow cors
-const cors = require("cors");
+const cors = require("cors"); 
 //Loop of allowed origins
 const allowedOrigins = [
   "http://localhost:3001",

@@ -132,8 +132,8 @@ router.get("/all", async (req, res) => {
             return res.status(401).json({ message: "Unauthorized", auth: false });
         }
 
-        if (check.data.role !== "admin") {
-            return res.status(401).json({ message: "You Are Not Admin", auth: false });
+        if (check.data.role !== "super_admin") {
+            return res.status(401).json({ message: "You Are Not Super Admin", auth: false });
         }
 
         const users = await UsersSchema.find().lean();

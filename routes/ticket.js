@@ -169,7 +169,7 @@ router.get("/status/:status", async (req, res) => {
 });
 
 //Update ticket status
-router.patch("/status/:ticketId", async (req, res) => {
+router.put("/status/:ticketId", async (req, res) => {
 
   //Check if status is not available 
   if (req.body.status !== "closed") {

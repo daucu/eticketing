@@ -15,6 +15,7 @@ const allowedOrigins = [
   "http://localhost:3001",
   "http://localhost:3000",
   "https://eticketing-admin.vercel.app",
+  "http://localhost:63303",
 ];
 
 app.use(

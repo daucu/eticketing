@@ -170,6 +170,12 @@ router.get("/status/:status", async (req, res) => {
 
 //Update ticket status
 router.patch("/status/:ticketId", async (req, res) => {
+
+  //Check if status is not available 
+  if (req.body.status !== "closed") {
+    return res.status(400).json({ message: "Invalid status" });
+  }
+
   try {
     const check = await CheckAuth(req, res);
 

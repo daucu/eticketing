@@ -34,6 +34,28 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//Get ticket by ID
+router.get("/my-ticket", async (req, res) => {
+
+  const check = await CheckAuth(req, res);
+
+  if (check.auth === false) {
+    return res.status(401).json({ message: "Unauthorized", auth: false });
+  }
+
+  try {
+    const ticket = await create_ticket.findById(req.params.id).populate({
+      path: "requester",
+      select: "name email full_name",
+    });
+    res.status(200).json(ticket);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: error.message, message: "something went wrong" });
+  }
+});
+
 //Create ticket route
 router.post("/", async (req, res) => {
   var uploaded_file;

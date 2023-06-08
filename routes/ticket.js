@@ -144,6 +144,21 @@ router.get("/", async (req, res) => {
   }
 });
 
+//Get all ticket
+router.get("/all", async (req, res) => {
+  try {
+    const tickets = await create_ticket.find().populate({
+      path: "requester",
+      select: "name email full_name",
+    });
+    res.status(200).json(tickets);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: error.message, message: "something went wrong" });
+  }
+});
+
 //Get ticket by status
 router.get("/status/:status", async (req, res) => {
   try {

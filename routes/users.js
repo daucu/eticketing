@@ -15,7 +15,7 @@ router.get("/:id", (req, res) => {
 });
 
 //Get all users
-router.get("/all", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const check = await CheckAuth(req, res);
 

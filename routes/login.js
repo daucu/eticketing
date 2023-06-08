@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
   if (check.auth === false) {
     return res.status(401).json({ message: "Unauthorized", auth: false });
   } else {
-    return res.status(200).json({ message: "Authorized", auth: true, data: check });
+    return res.status(200).json({ message: "Authorized", auth: true, data: check.data });
   }
 });
 

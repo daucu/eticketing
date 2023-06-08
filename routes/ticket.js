@@ -19,6 +19,21 @@ router.get("/all", async (req, res) => {
   }
 });
 
+//Get ticket by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const ticket = await create_ticket.findById(req.params.id).populate({
+      path: "requester",
+      select: "name email full_name",
+    });
+    res.status(200).json(ticket);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: error.message, message: "something went wrong" });
+  }
+});
+
 //Create ticket route
 router.post("/", async (req, res) => {
   var uploaded_file;
@@ -185,8 +200,7 @@ router.get("/status/:status", async (req, res) => {
 
 //Update ticket status
 router.put("/status/:ticketId", async (req, res) => {
-
-  //Check if status is not available 
+  //Check if status is not available
   if (req.body.status !== "closed") {
     return res.status(400).json({ message: "Invalid status" });
   }

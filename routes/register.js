@@ -28,7 +28,6 @@ router.post("/", validateRegister, async (req, res) => {
     password: hashed_password,
     language: "english",
     country: "india",
-    created_by: req.body.created_by,
     created_by: check.data._id,
   });
   try {

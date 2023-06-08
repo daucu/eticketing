@@ -14,6 +14,28 @@ router.get("/:id", (req, res) => {
     });
 });
 
+//Get all users
+router.get("/all", async (req, res) => {
+  try {
+    const check = await CheckAuth(req, res);
+
+    if (check.auth === false) {
+      return res.status(401).json({ message: "Unauthorized", auth: false });
+    }
+
+    if (check.data.role !== "super_admin") {
+      return res
+        .status(401)
+        .json({ message: "You Are Not Super Admin", auth: false });
+    }
+
+    const users = await UsersSchema.find().lean();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.post("/", validateRegister, async (req, res) => {
   //Hash password
   const hashed_password = await bcrypt.hash(req.body.password, 10);
@@ -126,28 +148,6 @@ async function validateRegister(req, res, next) {
 
   next();
 }
-
-//Get all users
-router.get("/all", async (req, res) => {
-  try {
-    const check = await CheckAuth(req, res);
-
-    if (check.auth === false) {
-      return res.status(401).json({ message: "Unauthorized", auth: false });
-    }
-
-    if (check.data.role !== "super_admin") {
-      return res
-        .status(401)
-        .json({ message: "You Are Not Super Admin", auth: false });
-    }
-
-    const users = await UsersSchema.find().lean();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
 
 //Delete user
 router.delete("/:id", async (req, res) => {

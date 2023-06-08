@@ -4,10 +4,14 @@ const UsersSchema = require("./../models/users_schema");
 const bcrypt = require("bcryptjs");
 const CheckAuth = require("./../functions/check_auth");
 
-router.get("/", (req, res) => {
-  res.json({
-    message: "Welcome to the API",
-  });
+router.get("/:id", (req, res) => {
+  UsersSchema.findOne({ _id: req.params.id })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
 });
 
 router.post("/", validateRegister, async (req, res) => {

@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const UsersSchema = require("./../models/users_schema");
 const bcrypt = require("bcryptjs");
-const CheckAuth = require("./../functions/check_auth");
 
 router.get("/", (req, res) => {
   res.json({
@@ -13,8 +12,6 @@ router.get("/", (req, res) => {
 router.post("/", validateRegister, async (req, res) => {
   //Hash password
   const hashed_password = await bcrypt.hash(req.body.password, 10);
-
-  const check = await CheckAuth(req, res);
 
   //Save user to database
   const save_user = new UsersSchema({
@@ -28,9 +25,8 @@ router.post("/", validateRegister, async (req, res) => {
     password: hashed_password,
     language: "english",
     country: "india",
-    created_by: check.data._id,
   });
-  try {
+  try { 
     await save_user.save();
     res.status(200).json({
       message: "User created successfully",
@@ -49,7 +45,7 @@ async function validateRegister(req, res, next) {
     full_name === "" ||
     phone === "" ||
     email === "" ||
-    username === "" ||
+    username === "" || 
     password === "" ||
     full_name === undefined ||
     phone === undefined ||

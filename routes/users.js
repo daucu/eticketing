@@ -40,6 +40,10 @@ router.post("/", validateRegister, async (req, res) => {
   //Hash password
   const hashed_password = await bcrypt.hash(req.body.password, 10);
 
+    //Check if user exists
+
+    const check = await CheckAuth(req, res);
+
   //Save user to database
   const save_user = new UsersSchema({
     full_name: req.body.full_name,
@@ -52,6 +56,7 @@ router.post("/", validateRegister, async (req, res) => {
     password: hashed_password,
     language: "english",
     country: "india",
+    created_by: check.data._id,
   });
   try {
     await save_user.save();

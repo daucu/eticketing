@@ -4,6 +4,21 @@ const create_ticket = require("./../models/ticket_schema");
 const path = require("path");
 const CheckAuth = require("./../functions/check_auth");
 
+//Get all ticket
+router.get("/all", async (req, res) => {
+  try {
+    const tickets = await create_ticket.find().populate({
+      path: "requester",
+      select: "name email full_name",
+    });
+    res.status(200).json(tickets);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: error.message, message: "something went wrong" });
+  }
+});
+
 //Create ticket route
 router.post("/", async (req, res) => {
   var uploaded_file;
@@ -132,21 +147,6 @@ router.get("/", async (req, res) => {
         .json({ message: "You Are Not Super Admin", auth: false });
     }
 
-    const tickets = await create_ticket.find().populate({
-      path: "requester",
-      select: "name email full_name",
-    });
-    res.status(200).json(tickets);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: error.message, message: "something went wrong" });
-  }
-});
-
-//Get all ticket
-router.get("/all", async (req, res) => {
-  try {
     const tickets = await create_ticket.find().populate({
       path: "requester",
       select: "name email full_name",

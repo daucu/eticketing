@@ -36,7 +36,6 @@ router.get("/:id", async (req, res) => {
 
 //Get ticket by ID
 router.get("/my-ticket", async (req, res) => {
-
   const check = await CheckAuth(req, res);
 
   if (check.auth === false) {
@@ -78,6 +77,11 @@ router.post("/", async (req, res) => {
 
   if (check.auth === false) {
     return res.status(401).json({ message: "Unauthorized", auth: false });
+  }
+
+  //CHeck all fields
+  if (!req.body.priority || !req.body.subject || !req.body.description) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   //Generate ticket number

@@ -40,9 +40,9 @@ router.post("/", validateRegister, async (req, res) => {
   //Hash password
   const hashed_password = await bcrypt.hash(req.body.password, 10);
 
-    //Check if user exists
+  //Check if user exists
 
-    const check = await CheckAuth(req, res);
+  const check = await CheckAuth(req, res);
 
   //Save user to database
   const save_user = new UsersSchema({
@@ -171,6 +171,34 @@ router.delete("/:id", async (req, res) => {
 
     const user = await UsersSchema.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//Update user
+router.patch("/:id", async (req, res) => {
+  try {
+    const check = await CheckAuth(req, res);
+
+    if (check.auth === false) {
+      return res.status(401).json({ message: "Unauthorized", auth: false });
+    }
+
+    if (check.data.role !== "super_admin") {
+      return res
+        .status(401)
+        .json({ message: "You Are Not Admin", auth: false });
+    }
+
+    const updates = req.body;
+    const options = { new: true };
+    const updatedUser = await UsersSchema.findByIdAndUpdate(
+      req.params.id,
+      updates,
+      options
+    );
+    res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
